@@ -1,4 +1,3 @@
-
 --Parte I. Creación de Base de Datos y Tablas (DDL)--
 
 use master
@@ -19,14 +18,12 @@ go
 
 create table TDepartamento(
 nDepartamentoID int identity (1,1) constraint PK_nDepartamentoID primary key,
-cNombreDepartamento NVARCHAR (50) constraint UQ_cNombreDepartamento unique not null,
-
+cNombreDepartamento NVARCHAR (50) constraint UQ_cNombreDepartamento unique not null
 );
-
 
 create table TCargo(
 nCargoID int identity (1,1) constraint PK_nCargoID primary key,
-cNombreCargo NVARCHAR (50) constraint UQ_cNombreCargo unique not null,
+cNombreCargo NVARCHAR (50) constraint UQ_cNombreCargo unique not null
 );
 
 create table TEmpleado(
@@ -37,14 +34,14 @@ cApellido NVARCHAR (50) not null,
 nDepartamentoID int constraint FK_nDepartamentoID foreign key references TDepartamento(nDepartamentoID) not null,
 nCargoID int constraint FK_nCargoID foreign key references TCargo(nCargoID) not null,
 dFechaContratacion date constraint DF_dFechaContratacion default (getdate()) not null,
-nSalario decimal constraint CK_nSalario check(nSalario>300) not null
+nSalario decimal(10,2) constraint CK_nSalario check(nSalario>300) not null
 );
 
 create table TProyecto(
 nIdProyecto int identity (1,1) constraint PK_nIdProyecto primary key,
 cNombreProyecto NVARCHAR (100) not null,
 nFechaInicio datetime not null,
-nFechaFinal datetime null,
+nFechaFinal datetime null
 );
 
 create table TEmpleadoProyecto(
@@ -84,7 +81,7 @@ alter table TEmpleado add dFechaNacimiento date;
 create table TSucursal(nSucursalID int identity (1,1) constraint PK_nSucursalID primary key, cNombreSucursal NVARCHAR (100) not null);
 
 --Parte III. Inserción de Datos (INSERT)--
- insert into TDepartamento (cNombreDepartamento) values
+insert into TDepartamento (cNombreDepartamento) values
 ('Recursos Humanos'),
 ('Tecnologia'),
 ('Finanzas'),
@@ -143,20 +140,22 @@ print 'Error porque es negativo consecuentemente menor a 300';
 end catch
 
 
-
 --Parte IV. Actualización de Datos (UPDATE)--
 
 update TEmpleado set nSalario = nSalario * 1.10;
 
 update TEmpleado set nSalario = nSalario * 1.20 where (nDepartamentoID = 1);
+
 update TEmpleado set cEmail = 'juan.nuevo@gmail.com' where (cNIF = 1001);
 
 update TEmpleado set nCargoID = 2 where (cNIF = 1001);
 
 update TEmpleado set nDepartamentoID = 4 where cNIF in (1002, 1003);
+
 update TEmpleado set bActivo = 0 where (nSalario < 500);
 
 update TProyecto set nFechaFinal = '2027-01-15' where (nIdProyecto = 1);
+
 insert into TEmpleadoProyecto (nEmpleadoID, nIdProyecto) values (1, 3);
 
 
@@ -174,7 +173,7 @@ delete from TEmpleadoProyecto where nEmpleadoID = 1;
 
 delete from TDepartamento where nDepartamentoID not in (select nDepartamentoID from TEmpleado);
 
---Desafíos Adicionales (lo pongo aqui antes de hacer drop table) --
+--Desafíos Adicionales (lo pongo aqui antes de hacer drop table)--
 
 create table TCliente(
 nClienteID int identity (1,1) constraint PK_nClienteID primary key,
@@ -219,20 +218,20 @@ insert into TCliente (cIdentificacion, cNombre, cApellido, cEmail, cTelefono, cD
 
 insert into TVenta (nClienteID, nEmpleadoID, nMontoTotal, dFechaVenta) values
 (1, 1, 150.50, '2026-01-10'), (1, 2, 300.00, '2026-01-15'), (2, 3, 450.25, '2026-01-20'), 
-(3, 4, 1200.00, '2026-01-25'), (4, 5, 80.00, '2026-02-05'), (5, 6, 95.50, '2026-02-15'),
+(3, 5, 1200.00, '2026-01-25'), (4, 5, 80.00, '2026-02-05'), (5, 6, 95.50, '2026-02-15'),
 (6, 7, 210.00, '2026-02-22'), (7, 8, 340.75, '2026-03-08'), (8, 9, 500.00, '2026-03-18'), 
 (9, 10, 75.20, '2026-03-28'), (10, 11, 1500.00, '2026-04-05'), (11, 12, 250.00, '2026-04-12'),
 (12, 13, 310.50, '2026-04-22'), (13, 1, 420.00, '2026-05-02'), (14, 2, 850.00, '2026-05-08'), 
-(15, 3, 95.00, '2026-05-18'), (16, 4, 110.25, '2026-05-28'), (17, 5, 600.00, '2026-06-02'),
+(15, 3, 95.00, '2026-05-18'), (16, 5, 110.25, '2026-05-28'), (17, 5, 600.00, '2026-06-02'),
 (18, 6, 720.00, '2026-06-04'), (19, 7, 890.50, '2026-06-06'), (1, 8, 100.00, '2026-01-12'), 
 (2, 9, 200.00, '2026-01-22'), (3, 10, 300.00, '2026-02-02'), (4, 11, 400.00, '2026-02-12'),
 (5, 12, 500.00, '2026-02-22'), (6, 13, 600.00, '2026-03-04'), (7, 1, 700.00, '2026-03-14'), 
-(8, 2, 800.00, '2026-03-24'), (9, 3, 900.00, '2026-04-03'), (10, 4, 1000.00, '2026-04-13'),
+(8, 2, 800.00, '2026-03-24'), (9, 3, 900.00, '2026-04-03'), (10, 5, 1000.00, '2026-04-13'),
 (11, 5, 1100.00, '2026-04-23'), (12, 6, 1200.00, '2026-05-03'), (13, 7, 130.00, '2026-05-13'), 
 (14, 8, 140.00, '2026-05-23'), (15, 9, 150.00, '2026-06-02'), (16, 10, 160.00, '2026-06-04'),
 (17, 11, 170.00, '2026-06-05'), (18, 12, 180.00, '2026-06-06'), (19, 13, 190.00, '2026-06-07'), 
 (1, 1, 200.00, '2026-01-18'), (2, 2, 210.00, '2026-01-28'), (3, 3, 220.00, '2026-02-08'),
-(4, 4, 230.00, '2026-02-18'), (5, 5, 240.00, '2026-02-28'), (6, 6, 250.00, '2026-03-10'), 
+(4, 5, 230.00, '2026-02-18'), (5, 5, 240.00, '2026-02-28'), (6, 6, 250.00, '2026-03-10'), 
 (7, 7, 260.00, '2026-03-20'), (8, 8, 270.00, '2026-03-30'), (9, 9, 280.00, '2026-04-09'),
 (10, 10, 290.00, '2026-04-19'), (11, 11, 300.00, '2026-04-29');
 
@@ -260,7 +259,6 @@ select v.nVentaID, concat(c.cNombre, ' ', c.cApellido) as cliente_completo, conc
 from TVenta v 
 inner join TCliente c on v.nClienteID = c.nClienteID 
 inner join TEmpleado e on v.nEmpleadoID = e.nEmpleadoID;
-
 
 
 --Parte VI. Consultas de Verificación--
@@ -323,4 +321,3 @@ alter database EmpresaSQL set single_user with rollback immediate
 drop database EmpresaSQL
 
 go
-
